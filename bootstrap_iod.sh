@@ -8,5 +8,7 @@ yum -y install git
 systemctl enable docker
 systemctl start docker
 
-git clone git@github.com:mboogert/iod.git
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+git clone https://github.com/mboogert/iod.git
+
 docker-compose up -d
