@@ -25,5 +25,5 @@ done
 
 curl -X POST -d '{"name":"influxdb", "type":"influxdb", "url":"http://influxdb:8086", "access":"proxy", "database":"telegraf", "basicAuth":false}' -H 'Content-Type: application/json;charset=UTF-8' http://admin:admin@localhost/api/datasources/
 sleep 1
-curl -X POST -d @/iod/bak/telegraf-system-dashboard2.json -H 'Content-Type: application/json;charset=UTF-8' http://admin:admin@localhost/api/dashboards/db
+curl -X POST -d @/iod/telegraf-system-dashboard.json -H 'Content-Type: application/json;charset=UTF-8' http://admin:admin@localhost/api/dashboards/db
 sleep 1
