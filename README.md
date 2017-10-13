@@ -4,8 +4,8 @@ This project creates a performance metric stack on openstack. The purpose is to 
 
 The stack uses:
 
-telegraf
-influxdb
-grafana
+* telegraf
+* influxdb
+* grafana
 
 All components are completely configured, resulting with a default dashboard to monitor system performance.
