@@ -35,3 +35,4 @@ variable "tenant_network" {
     default  = "net-work"
 }
 ```
+Dashboard based on: https://grafana.com/dashboards/928
