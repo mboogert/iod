@@ -25,6 +25,19 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - "80:3000"
+      - "3000:3000"
     links:
       - influxdb
+  # Define a NGINX service
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./etc/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt/live/iod.proserve.nl/fullchain.pem:/etc/letsencrypt/live/iod.proserve.nl/fullchain.pem
+      - /etc/letsencrypt/live/iod.proserve.nl/privkey.pem:/etc/letsencrypt/live/iod.proserve.nl/privkey.pem
+    ports:         
+      - "80:80"
+      - "443:443"
+    links:
+      - grafana

@@ -1,4 +1,13 @@
-## General
+resource "openstack_compute_secgroup_v2" "customer_influxdb_access_sg" {
+  name = "customer_influxdb_access_sg"
+  description = "allow customer to write to influxdb"
+  rule {
+    from_port = 8086
+    to_port = 8086
+    ip_protocol = "tcp"
+    cidr = "${var.customer_ip}/32"
+  }
+}
 resource "openstack_compute_secgroup_v2" "ssh_sg" {
   name = "ssh-sg"
   description = "ssh security group"
@@ -52,23 +61,20 @@ resource "openstack_networking_router_interface_v2" "iod_ext_interface" {
 }
 
 resource "openstack_compute_instance_v2" "iod" {
-  name = "iod"
+  name = "${var.customer_name}_iod"
   image_name = "CentOS 7 (LTS)"
   availability_zone = "AMS-EQ1"
   flavor_name = "Standard 4GB"
-  key_pair = "${var.openstack_keypair}"
-  security_groups = ["${openstack_compute_secgroup_v2.ssh_sg.name}","${openstack_compute_secgroup_v2.web_sg.name}"]
+  key_pair = "openstack20"
+  security_groups = ["${openstack_compute_secgroup_v2.ssh_sg.name}","${openstack_compute_secgroup_v2.web_sg.name}","${openstack_compute_secgroup_v2.customer_influxdb_access_sg.name}"]
   network {
     uuid = "${openstack_networking_network_v2.iod_net.id}"
   }
   user_data = "${file("bootstrap_iod.sh")}"
 }
 
-resource "openstack_networking_floatingip_v2" "iod_fip" {
-  pool = "floating"
+resource "openstack_compute_floatingip_associate_v2" "iod_fip" {
+  instance_id = "${openstack_compute_instance_v2.iod.id}"
+  floating_ip = "${var.external_ip}"
 }
 
-resource "openstack_compute_floatingip_associate_v2" "iod_fip" {
-  floating_ip = "${openstack_networking_floatingip_v2.iod_fip.address}"
-  instance_id = "${openstack_compute_instance_v2.iod.id}"
-}
